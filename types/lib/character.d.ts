@@ -1,3 +1,6 @@
+import { Mesh } from "three";
+import { Character } from "../impl/characters/base";
+import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
 import { ActionMap } from "./input";
 import { Sprite } from "./sprite";
@@ -20,11 +23,17 @@ export declare class FGCharacter {
     brain: StateMachine;
     sprite: Sprite;
     actionMap: ActionMap;
-    constructor({ animator, sprite, actionMap, }: {
+    data: Character;
+    hurtbox: Mesh;
+    game: FGame;
+    health: f32;
+    constructor({ animator, data, sprite, actionMap, }: {
         animator?: AnimationComponent;
+        data: Character;
         sprite: Sprite;
         actionMap: ActionMap;
     });
     handle(): void;
     play(clip: AnimationClip): void;
+    takeDamage(amount: f32): void;
 }

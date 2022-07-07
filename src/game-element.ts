@@ -1,8 +1,6 @@
 import { css, LitElement } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { Vector2 } from "three";
-
 import { FGCharacter } from "./lib/character";
 import { runAnimationSystem } from "./lib/animation";
 import { createSprite } from "./lib/sprite";
@@ -13,6 +11,8 @@ import { f32 } from "./lib/types";
 import { FGame } from "./impl/game";
 import { ActionTrigger, KeyboardActionTrigger } from "./lib/input";
 import { P1Controls, P2Controls } from "./impl/controls";
+import { Tony } from "./impl/characters/tony";
+import { Rendy } from "./impl/characters/rendy";
 
 @customElement("game-element")
 export class GameElement extends LitElement {
@@ -32,18 +32,14 @@ export class GameElement extends LitElement {
 
   private init(game: FGame) {
     const p1 = new FGCharacter({
-      sprite: createSprite({
-        spritePath: "assets/Char_3.png",
-        tileSize: new Vector2(18, 16),
-      }),
+      data: Tony,
+      sprite: createSprite(Tony.sprite),
       actionMap: P1Controls,
     });
 
     const p2 = new FGCharacter({
-      sprite: createSprite({
-        spritePath: "assets/Char_4.png",
-        tileSize: new Vector2(18, 16),
-      }),
+      data: Rendy,
+      sprite: createSprite(Rendy.sprite),
       actionMap: P2Controls,
     });
 

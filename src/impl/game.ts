@@ -4,6 +4,7 @@ import GUI, { Controller } from "lil-gui";
 import { FGCharacter } from "../lib/character";
 import { Game } from "../lib/game";
 import { f32, i32 } from "../lib/types";
+import { Mesh } from "three";
 
 export class FGame extends Game {
   public activeScene: THREE.Scene;
@@ -19,6 +20,8 @@ export class FGame extends Game {
   public addPlayers(...characters: FGCharacter[]) {
     characters.forEach((character) => {
       this.players.push(character);
+      this.colliders.push(character.hurtbox);
+      character.game = this;
 
       this.gui.push(
         createGUICtrl(
@@ -29,6 +32,8 @@ export class FGame extends Game {
       );
     });
   }
+
+  public colliders: Mesh[] = [];
 
   constructor() {
     super();
@@ -131,6 +136,8 @@ function getGUIPosition(playerIndex: i32) {
 }
 
 export type GUICtrl = {
+  name: Controller;
+  health: Controller;
   left: {
     triggered: Controller;
     held: Controller;
@@ -175,6 +182,8 @@ function createGUICtrl(
     container,
   });
   return {
+    name: gui.add(character.data, "name").name("Name").listen(false),
+    health: gui.add(character, "health").name(`${name} Health`).listen(true),
     left: {
       triggered: gui
         .add(character.actionMap.Left, "triggered")
