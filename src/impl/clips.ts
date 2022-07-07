@@ -27,3 +27,10 @@ export const walkBack: AnimationClip = {
   length: 1,
   fps: 1,
 };
+
+export const die: AnimationClip = {
+  loop: false,
+  start: 18 * 3 + 7,
+  length: 1,
+  fps: 1,
+};

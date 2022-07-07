@@ -1,7 +1,7 @@
 import { BoxBufferGeometry, Mesh, MeshBasicMaterial } from "three";
 import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
-import { IdleState } from "../impl/states";
+import { DeathState, IdleState } from "../impl/states";
 import { AnimationClip, AnimationComponent } from "./animation";
 import { ActionMap } from "./input";
 import { Sprite } from "./sprite";
@@ -19,15 +19,19 @@ export class StateMachine {
 
   public current: State | null = null;
 
+  public change(state: State | null) {
+    if (this.current) this.current.exit(this.character);
+    this.current = state;
+    if (this.current) this.current.enter(this.character);
+  }
+
   public handle() {
     if (!this.current) return;
 
     const state = this.current.handle(this.character);
     if (state === null) return;
 
-    this.current.exit(this.character);
-    this.current = state;
-    this.current.enter(this.character);
+    this.change(state);
   }
 
   public update(dt: f32) {
@@ -91,6 +95,11 @@ export class FGCharacter {
   }
 
   public takeDamage(amount: f32) {
+    if (this.health <= 0) return;
+
     this.health -= amount;
+    if (this.health <= 0) {
+      this.brain.change(new DeathState());
+    }
   }
 }

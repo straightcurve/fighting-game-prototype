@@ -2,7 +2,7 @@ import { BoxBufferGeometry, Mesh, MeshBasicMaterial } from "three";
 import { FGCharacter, State } from "../lib/character";
 import { f32, i32 } from "../lib/types";
 import { getRoot, overlap } from "../lib/utils";
-import { idle, walk, walkBack } from "./clips";
+import { die, idle, walk, walkBack } from "./clips";
 
 export class IdleState implements State {
   public enter(character: FGCharacter) {
@@ -130,4 +130,18 @@ export class WalkBackState implements State {
   public update(dt: f32, character: FGCharacter) {
     character.sprite.position.x -= 0.5 * dt;
   }
+}
+
+export class DeathState implements State {
+  public enter(character: FGCharacter) {
+    character.play(die);
+  }
+
+  public exit() {}
+
+  public handle(_character: FGCharacter): State | null {
+    return null;
+  }
+
+  public update(_dt: f32, _character: FGCharacter) {}
 }
