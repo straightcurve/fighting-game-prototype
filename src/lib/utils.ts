@@ -1,4 +1,5 @@
 import { Box3, Mesh, Object3D, Scene } from "three";
+import { f32 } from "./types";
 
 export function overlap(hitbox: Mesh, hurtboxes: Mesh[], ignore: Mesh[] = []) {
   for (let hi = 0; hi < hurtboxes.length; hi++) {
@@ -31,4 +32,8 @@ export function getRoot(object: Object3D) {
   while (current.parent && !(current.parent as Scene).isScene)
     current = current.parent;
   return current;
+}
+
+export function degToRad(degrees: f32) {
+  return (degrees * Math.PI) / 180;
 }

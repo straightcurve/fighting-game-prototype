@@ -1,7 +1,7 @@
 import { Vector2 } from "three";
 import { Character } from "./base";
 
-export const Rendy: Character = {
+export const Rendy: Character & any = {
   name: "Rendy",
   maxHealth: 200,
   hurtbox: new Vector2(0.3, 0.65),
@@ -36,5 +36,16 @@ export const Rendy: Character = {
         size: new Vector2(0.3, 0.2),
       },
     ],
+  },
+  chargeAttack: {
+    clip: {
+      loop: false,
+      start: 18 * 5 + 0,
+      length: 6,
+      fps: 1.85,
+    },
+    startup: 120,
+    active: 40,
+    recovery: 8,
   },
 };
