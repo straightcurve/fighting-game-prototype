@@ -26,3 +26,4 @@ dist-ssr
 
 __tests__/main.test.ts
 src/main.ts
+types/main.d.ts

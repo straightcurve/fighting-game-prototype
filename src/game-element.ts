@@ -7,10 +7,12 @@ import { FGCharacter } from "./lib/character";
 import { runAnimationSystem } from "./lib/animation";
 import { createSprite } from "./lib/sprite";
 
+//@ts-ignore
 import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls";
 import { f32 } from "./lib/types";
 import { FGame } from "./impl/game";
 import { ActionTrigger, KeyboardActionTrigger } from "./lib/input";
+import { P1Controls, P2Controls } from "./impl/controls";
 
 @customElement("game-element")
 export class GameElement extends LitElement {
@@ -22,7 +24,6 @@ export class GameElement extends LitElement {
   `;
 
   public game = new FGame();
-
   constructor() {
     super();
 
@@ -35,16 +36,7 @@ export class GameElement extends LitElement {
         spritePath: "assets/Char_3.png",
         tileSize: new Vector2(18, 16),
       }),
-      actionMap: {
-        LightAttack: {
-          key: "e",
-          triggered: false,
-        },
-        Start: {
-          key: "z",
-          triggered: false,
-        },
-      },
+      actionMap: P1Controls,
     });
 
     const p2 = new FGCharacter({
@@ -52,16 +44,7 @@ export class GameElement extends LitElement {
         spritePath: "assets/Char_4.png",
         tileSize: new Vector2(18, 16),
       }),
-      actionMap: {
-        LightAttack: {
-          key: "m",
-          triggered: false,
-        },
-        Start: {
-          key: "/",
-          triggered: false,
-        },
-      },
+      actionMap: P2Controls,
     });
 
     p1.sprite.position.set(-0.5, 0, 0);
@@ -74,7 +57,24 @@ export class GameElement extends LitElement {
     window.onkeydown = (ev) => {
       const check = (trigger: ActionTrigger) => {
         const t = trigger as KeyboardActionTrigger;
+        if (t.held) return;
         t.triggered = t.key === ev.key;
+      };
+
+      for (let pi = 0; pi < game.players.length; pi++) {
+        const p = game.players[pi];
+        for (const a in p.actionMap) {
+          //@ts-ignore
+          const trigger: ActionTrigger = p.actionMap[a];
+          check(trigger);
+        }
+      }
+    };
+
+    window.onkeyup = (ev) => {
+      const check = (trigger: ActionTrigger) => {
+        const t = trigger as KeyboardActionTrigger;
+        if (t.key === ev.key) t.held = false;
       };
 
       for (let pi = 0; pi < game.players.length; pi++) {

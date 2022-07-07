@@ -64,10 +64,14 @@ export class FGame extends Game {
         if (attemptedPause) this.paused = !this.paused;
       }
 
-      p.brain.handle(p.input);
+      p.brain.handle();
     }
 
     this.gui.forEach((gui) => {
+      gui.left.triggered.updateDisplay();
+      gui.left.held.updateDisplay();
+      gui.right.triggered.updateDisplay();
+      gui.right.held.updateDisplay();
       gui.lightAttack.updateDisplay();
       gui.start.updateDisplay();
       gui.animator.frame.updateDisplay();
@@ -79,6 +83,7 @@ export class FGame extends Game {
       for (const a in p.actionMap) {
         //@ts-ignore
         const trigger: ActionTrigger = p.actionMap[a];
+        if (trigger.triggered) trigger.held = true;
         trigger.triggered = false;
       }
     }
@@ -124,6 +129,14 @@ function getGUIPosition(playerIndex: i32) {
 }
 
 export type GUICtrl = {
+  left: {
+    triggered: Controller;
+    held: Controller;
+  };
+  right: {
+    triggered: Controller;
+    held: Controller;
+  };
   lightAttack: Controller;
   start: Controller;
   animator: {
@@ -154,6 +167,26 @@ function createGUICtrl(
     container,
   });
   return {
+    left: {
+      triggered: gui
+        .add(character.actionMap.Left, "triggered")
+        .name(`${name} Left Tap`)
+        .listen(false),
+      held: gui
+        .add(character.actionMap.Left, "held")
+        .name(`${name} Left Hold`)
+        .listen(false),
+    },
+    right: {
+      triggered: gui
+        .add(character.actionMap.Right, "triggered")
+        .name(`${name} Right Tap`)
+        .listen(false),
+      held: gui
+        .add(character.actionMap.Right, "held")
+        .name(`${name} Right Hold`)
+        .listen(false),
+    },
     lightAttack: gui
       .add(character.actionMap.LightAttack, "triggered")
       .name(`${name} Light Attack`)

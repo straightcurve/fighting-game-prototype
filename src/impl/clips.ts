@@ -11,5 +11,19 @@ export const punch: AnimationClip = {
   loop: false,
   start: 36,
   length: 2,
-  fps: 1.5,
+  fps: 1.35,
+};
+
+export const walk: AnimationClip = {
+  loop: true,
+  start: 19,
+  length: 1,
+  fps: 1,
+};
+
+export const walkBack: AnimationClip = {
+  loop: false,
+  start: 18,
+  length: 1,
+  fps: 1,
 };

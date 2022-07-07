@@ -6,8 +6,8 @@ export interface PlayerInput {
   start: boolean;
 }
 
-export type Action = "LightAttack" | "Start";
-export type ActionTrigger = { triggered: boolean };
+export type Action = "Left" | "Right" | "LightAttack" | "Start";
+export type ActionTrigger = { triggered: boolean; held: boolean };
 export type KeyboardActionTrigger = { key: string } & ActionTrigger;
 export type ButtonActionTrigger = { checkbutton: string } & ActionTrigger;
 export type ActionMap = {
