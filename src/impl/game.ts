@@ -72,8 +72,10 @@ export class FGame extends Game {
       gui.left.held.updateDisplay();
       gui.right.triggered.updateDisplay();
       gui.right.held.updateDisplay();
-      gui.lightAttack.updateDisplay();
-      gui.start.updateDisplay();
+      gui.lightAttack.triggered.updateDisplay();
+      gui.lightAttack.held.updateDisplay();
+      gui.start.triggered.updateDisplay();
+      gui.start.held.updateDisplay();
       gui.animator.frame.updateDisplay();
     });
 
@@ -137,8 +139,14 @@ export type GUICtrl = {
     triggered: Controller;
     held: Controller;
   };
-  lightAttack: Controller;
-  start: Controller;
+  lightAttack: {
+    triggered: Controller;
+    held: Controller;
+  };
+  start: {
+    triggered: Controller;
+    held: Controller;
+  };
   animator: {
     frame: Controller;
   };
@@ -187,14 +195,26 @@ function createGUICtrl(
         .name(`${name} Right Hold`)
         .listen(false),
     },
-    lightAttack: gui
-      .add(character.actionMap.LightAttack, "triggered")
-      .name(`${name} Light Attack`)
-      .listen(false),
-    start: gui
-      .add(character.actionMap.Start, "triggered")
-      .name(`${name} Start`)
-      .listen(false),
+    lightAttack: {
+      triggered: gui
+        .add(character.actionMap.LightAttack, "triggered")
+        .name(`${name} Light Attack Tap`)
+        .listen(false),
+      held: gui
+        .add(character.actionMap.LightAttack, "held")
+        .name(`${name} Light Attack Hold`)
+        .listen(false),
+    },
+    start: {
+      triggered: gui
+        .add(character.actionMap.Start, "triggered")
+        .name(`${name} Start Tap`)
+        .listen(false),
+      held: gui
+        .add(character.actionMap.Start, "held")
+        .name(`${name} Start Hold`)
+        .listen(false),
+    },
     animator: {
       frame: gui
         .add(character.animator, "frame")
