@@ -1,18 +1,19 @@
 import { Vector2 } from "three";
 import { Character } from "./base";
 
-export const Rendy: Character & any = {
+export const Rendy: Character = {
   name: "Rendy",
   maxHealth: 200,
   hurtbox: new Vector2(0.3, 0.65),
   sprite: {
-    spritePath: "assets/Char_3.png",
-    tileSize: new Vector2(18, 16),
+    spritePath: "assets/Rendy.png",
+    tileSize: new Vector2(36, 16),
   },
   lightAttack: {
     clip: {
       loop: false,
-      start: 36,
+      //@ts-ignore
+      start: { right: 72, left: 36 * 3 - 1 },
       length: 1,
       get fps() {
         const la = Rendy.lightAttack;

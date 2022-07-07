@@ -20,6 +20,7 @@ export class StateMachine {
   public current: State | null = null;
 
   public change(state: State | null) {
+    console.log(state);
     if (this.current) this.current.exit(this.character);
     this.current = state;
     if (this.current) this.current.enter(this.character);
@@ -50,20 +51,24 @@ export class FGCharacter {
   public game!: FGame;
 
   public health: f32;
+  public facingRight: boolean;
 
   constructor({
     animator,
     data,
     sprite,
     actionMap,
+    facingRight = true,
   }: {
     animator?: AnimationComponent;
     data: Character;
     sprite: Sprite;
     actionMap: ActionMap;
+    facingRight?: boolean;
   }) {
     this.animator = animator || { frame: 0, elapsed: 0 };
     this.sprite = sprite;
+    this.facingRight = facingRight;
     this.brain = new StateMachine(this);
     this.brain.current = new IdleState();
     this.brain.current.enter(this);
@@ -91,7 +96,16 @@ export class FGCharacter {
 
   public play(clip: AnimationClip) {
     this.animator.clip = clip;
-    this.animator.frame = clip.start;
+    //@ts-ignore
+    if (clip.start.right === undefined) {
+      this.animator.frame = clip.start;
+      return;
+    }
+
+    //@ts-ignore
+    if (this.facingRight) this.animator.frame = clip.start.right;
+    //@ts-ignore
+    else this.animator.frame = clip.start.left;
   }
 
   public takeDamage(amount: f32) {

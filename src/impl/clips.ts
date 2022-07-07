@@ -7,30 +7,51 @@ export const idle: AnimationClip = {
   fps: 3,
 };
 
-export const punch: AnimationClip = {
-  loop: false,
-  start: 36,
-  length: 2,
-  fps: 1.35,
+export const idleLeft: AnimationClip = {
+  loop: true,
+  start: 36 - 8 - 3,
+  length: 3,
+  fps: 3,
 };
 
 export const walk: AnimationClip = {
   loop: true,
-  start: 19,
+  start: 37,
+  length: 1,
+  fps: 1,
+};
+
+export const walkLeft: AnimationClip = {
+  loop: true,
+  start: 72 - 1 - 1,
   length: 1,
   fps: 1,
 };
 
 export const walkBack: AnimationClip = {
   loop: false,
-  start: 18,
+  start: 36,
+  length: 1,
+  fps: 1,
+};
+
+export const walkBackLeft: AnimationClip = {
+  loop: false,
+  start: 72 - 1,
   length: 1,
   fps: 1,
 };
 
 export const die: AnimationClip = {
   loop: false,
-  start: 18 * 3 + 7,
+  start: 36 * 3 + 7,
+  length: 1,
+  fps: 1,
+};
+
+export const dieLeft: AnimationClip = {
+  loop: false,
+  start: 36 * 4 - 7 - 1,
   length: 1,
   fps: 1,
 };

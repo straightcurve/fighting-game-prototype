@@ -6,13 +6,17 @@ export const Tony: Character = {
   maxHealth: 100,
   hurtbox: new Vector2(0.3, 0.65),
   sprite: {
-    spritePath: "assets/Char_4.png",
-    tileSize: new Vector2(18, 16),
+    spritePath: "assets/Tony.png",
+    tileSize: new Vector2(36, 16),
   },
   lightAttack: {
     clip: {
       loop: false,
-      start: 36,
+      //@ts-ignore
+      start: {
+        right: 72,
+        left: 72 + 36,
+      },
       length: 1,
       get fps() {
         const la = Tony.lightAttack;

@@ -18,4 +18,11 @@ export type Character = {
     hitbox: { position: Vector2; size: Vector2 }[];
     clip: AnimationClip;
   };
+
+  chargeAttack?: {
+    startup: i32;
+    active: i32;
+    recovery: i32;
+    clip: AnimationClip;
+  };
 };

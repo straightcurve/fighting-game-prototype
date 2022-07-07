@@ -15,6 +15,7 @@ export declare class StateMachine {
     private character;
     constructor(character: FGCharacter);
     current: State | null;
+    change(state: State | null): void;
     handle(): void;
     update(dt: f32): void;
 }
@@ -27,11 +28,13 @@ export declare class FGCharacter {
     hurtbox: Mesh;
     game: FGame;
     health: f32;
-    constructor({ animator, data, sprite, actionMap, }: {
+    facingRight: boolean;
+    constructor({ animator, data, sprite, actionMap, facingRight, }: {
         animator?: AnimationComponent;
         data: Character;
         sprite: Sprite;
         actionMap: ActionMap;
+        facingRight?: boolean;
     });
     handle(): void;
     play(clip: AnimationClip): void;

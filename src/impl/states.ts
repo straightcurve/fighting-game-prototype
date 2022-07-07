@@ -13,20 +13,37 @@ import { FGCharacter, State } from "../lib/character";
 import { createSprite, Sprite } from "../lib/sprite";
 import { f32, i32 } from "../lib/types";
 import { getRoot, overlap } from "../lib/utils";
-import { die, idle, walk, walkBack } from "./clips";
+import {
+  die,
+  dieLeft,
+  idle,
+  idleLeft,
+  walk,
+  walkBack,
+  walkBackLeft,
+  walkLeft,
+} from "./clips";
 
 export class IdleState implements State {
   public enter(character: FGCharacter) {
-    character.play(idle);
+    if (character.facingRight) character.play(idle);
+    else character.play(idleLeft);
   }
 
   public exit() {}
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
-    if (character.actionMap.LightAttack.held) return new ChargeState();
-    if (character.actionMap.Left.held) return new WalkBackState();
-    if (character.actionMap.Right.held) return new WalkState();
+    if (character.data.chargeAttack)
+      if (character.actionMap.LightAttack.held) return new ChargeState();
+
+    if (character.facingRight) {
+      if (character.actionMap.Left.held) return new WalkBackState();
+      if (character.actionMap.Right.held) return new WalkState();
+    } else {
+      if (character.actionMap.Left.held) return new WalkState();
+      if (character.actionMap.Right.held) return new WalkBackState();
+    }
 
     return null;
   }
@@ -84,8 +101,11 @@ export class PunchState implements State {
       const hitbox = la.hitbox[la.hitbox.length - this.frameData.active - 1];
       const geo = new BoxBufferGeometry(hitbox.size.x, hitbox.size.y, 0);
       this.hitbox.geometry = geo;
-      this.hitbox.position.x = hitbox.position.x;
-      this.hitbox.position.y = hitbox.position.y;
+
+      let direction = 1;
+      if (!character.facingRight) direction = -1;
+      this.hitbox.position.x = direction * hitbox.position.x;
+      this.hitbox.position.y = direction * hitbox.position.y;
 
       const hit = overlap(this.hitbox, character.game.colliders, this.ignore);
       if (!hit) return;
@@ -106,47 +126,68 @@ export class PunchState implements State {
 
 export class WalkState implements State {
   public enter(character: FGCharacter) {
-    character.play(walk);
+    if (character.facingRight) character.play(walk);
+    else character.play(walkLeft);
   }
 
   public exit() {}
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
-    if (character.actionMap.Left.held) return new WalkBackState();
-    if (character.actionMap.Right.held) return null;
+
+    if (character.facingRight) {
+      if (character.actionMap.Left.held) return new WalkBackState();
+      if (character.actionMap.Right.held) return null;
+    } else {
+      if (character.actionMap.Right.held) return new WalkBackState();
+      if (character.actionMap.Left.held) return null;
+    }
 
     return new IdleState();
   }
 
   public update(dt: f32, character: FGCharacter) {
-    character.sprite.position.x += 0.5 * dt;
+    let direction = 1;
+    if (!character.facingRight) direction = -1;
+
+    character.sprite.position.x += direction * 0.5 * dt;
   }
 }
 
 export class WalkBackState implements State {
   public enter(character: FGCharacter) {
-    character.play(walkBack);
+    if (character.facingRight) character.play(walkBack);
+    else character.play(walkBackLeft);
   }
 
   public exit() {}
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
-    if (character.actionMap.Left.held) return null;
-    if (character.actionMap.Right.held) return new WalkState();
+
+    if (character.facingRight) {
+      if (character.actionMap.Left.held) return null;
+      if (character.actionMap.Right.held) return new WalkState();
+    } else {
+      if (character.actionMap.Right.held) return null;
+      if (character.actionMap.Left.held) return new WalkState();
+    }
 
     return new IdleState();
   }
 
   public update(dt: f32, character: FGCharacter) {
-    character.sprite.position.x -= 0.5 * dt;
+    let direction = 1;
+    if (!character.facingRight) direction = -1;
+
+    character.sprite.position.x -= direction * 0.5 * dt;
   }
 }
 
 export class DeathState implements State {
   public enter(character: FGCharacter) {
-    character.play(die);
+    if (character.facingRight) character.play(die);
+    else character.play(dieLeft);
   }
 
   public exit() {}
@@ -171,8 +212,9 @@ export class ChargeState implements State {
   public ignore: Mesh[] = [];
 
   public enter(character: FGCharacter) {
-    //@ts-ignore
     const ca = character.data.chargeAttack;
+    if (!ca) throw new Error("no charge attack");
+
     character.play(ca.clip);
 
     this.frameData = {
@@ -228,8 +270,8 @@ export class ChargeState implements State {
   }
 
   public update(dt: f32, character: FGCharacter) {
-    //@ts-ignore
     const ca = character.data.chargeAttack;
+    if (!ca) throw new Error("no charge attack");
 
     this.rock.material.opacity =
       (ca.startup - this.frameData.startup) / ca.startup;
@@ -250,7 +292,10 @@ export class ChargeState implements State {
 
       this.frameData.active--;
 
-      this.rock.position.x += 2 * dt;
+      let direction = 1;
+      if (!character.facingRight) direction = -1;
+
+      this.rock.position.x += direction * 2 * dt;
       this.rock.position.y -= 2 * dt;
 
       const hit = overlap(this.hitbox, character.game.colliders, this.ignore);

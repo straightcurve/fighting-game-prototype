@@ -41,6 +41,7 @@ export class GameElement extends LitElement {
       data: Rendy,
       sprite: createSprite(Rendy.sprite),
       actionMap: P2Controls,
+      facingRight: false,
     });
 
     p1.sprite.position.set(-0.5, 0, 0);

@@ -20,6 +20,7 @@ export declare class FGame extends Game {
 }
 export declare type GUICtrl = {
     name: Controller;
+    health: Controller;
     left: {
         triggered: Controller;
         held: Controller;

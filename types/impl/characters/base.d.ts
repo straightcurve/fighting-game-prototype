@@ -19,4 +19,10 @@ export declare type Character = {
         }[];
         clip: AnimationClip;
     };
+    chargeAttack?: {
+        startup: i32;
+        active: i32;
+        recovery: i32;
+        clip: AnimationClip;
+    };
 };
