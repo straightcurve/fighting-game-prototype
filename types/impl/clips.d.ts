@@ -7,3 +7,5 @@ export declare const walkBack: AnimationClip;
 export declare const walkBackLeft: AnimationClip;
 export declare const die: AnimationClip;
 export declare const dieLeft: AnimationClip;
+export declare const block: AnimationClip;
+export declare const blockLeft: AnimationClip;

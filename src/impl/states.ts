@@ -257,7 +257,7 @@ export class ChargeState implements State {
 
     this.ignore.push(character.hurtbox);
     this.rock = createSprite({
-      spritePath: "assets/rock.png",
+      colorMap: "assets/rock.png",
       tileSize: new Vector2(1, 1),
     });
     this.rock.position.y = 0.75;

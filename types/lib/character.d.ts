@@ -29,6 +29,7 @@ export declare class FGCharacter {
     game: FGame;
     health: f32;
     facingRight: boolean;
+    isBlocking: boolean;
     constructor({ animator, data, sprite, actionMap, facingRight, }: {
         animator?: AnimationComponent;
         data: Character;

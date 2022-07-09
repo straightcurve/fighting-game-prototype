@@ -4,25 +4,37 @@ export type SpriteAtlas = {
   tileSize: THREE.Vector2;
 };
 
-export type Sprite = THREE.Sprite & {
+export type Sprite = THREE.Mesh & {
   userData: {
     atlas: SpriteAtlas;
   };
 };
 
 export function createSprite({
-  spritePath,
+  colorMap,
+  alphaMap,
   tileSize,
 }: {
-  spritePath: string;
+  colorMap: string;
+  alphaMap?: string;
   tileSize: THREE.Vector2;
 }): Sprite {
-  const map = new THREE.TextureLoader().load(spritePath);
+  const map = new THREE.TextureLoader().load(colorMap);
   map.magFilter = THREE.NearestFilter;
 
-  const material = new THREE.SpriteMaterial({ map });
+  const material = new THREE.MeshToonMaterial({
+    map,
+    color: 0xffffff,
+    transparent: true,
+  });
+  if (alphaMap) {
+    material.alphaMap = new THREE.TextureLoader().load(alphaMap);
+  }
 
-  const sprite = new THREE.Sprite(material) as Sprite;
+  const geo = new THREE.PlaneGeometry(1, 1);
+  //@ts-ignore
+  const sprite = new THREE.Mesh(geo, material) as Sprite;
+
   sprite.userData.atlas = {
     tileSize: tileSize.clone(),
   };

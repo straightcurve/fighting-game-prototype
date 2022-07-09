@@ -6,7 +6,8 @@ export const Tony: Character = {
   maxHealth: 100,
   hurtbox: new Vector2(0.3, 0.65),
   sprite: {
-    spritePath: "assets/Tony.png",
+    alphaMap: "assets/Tony.alpha.png",
+    colorMap: "assets/Tony.png",
     tileSize: new Vector2(36, 16),
   },
   lightAttack: {

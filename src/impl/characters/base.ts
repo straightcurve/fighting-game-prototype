@@ -7,7 +7,8 @@ export type Character = {
   maxHealth: f32;
   hurtbox: Vector2;
   sprite: {
-    spritePath: string;
+    alphaMap: string;
+    colorMap: string;
     tileSize: Vector2;
   };
 

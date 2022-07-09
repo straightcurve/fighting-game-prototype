@@ -13,6 +13,7 @@ import { ActionTrigger, KeyboardActionTrigger } from "./lib/input";
 import { P1Controls, P2Controls } from "./impl/controls";
 import { Tony } from "./impl/characters/tony";
 import { Rendy } from "./impl/characters/rendy";
+import { DirectionalLight, Vector2, Vector3 } from "three";
 
 @customElement("game-element")
 export class GameElement extends LitElement {
@@ -95,14 +96,29 @@ export class GameElement extends LitElement {
       runAnimationSystem(dt, [p1, p2]);
     });
 
-    const controls = new OrbitControls(
-      game.mainCamera,
-      game.renderer.domElement
-    );
+    // const controls = new OrbitControls(
+    //   game.mainCamera,
+    //   game.renderer.domElement
+    // );
+    //
+    // game.systems.push((_dt: f32) => {
+    //   controls.update();
+    // });
 
-    game.systems.push((_dt: f32) => {
-      controls.update();
+    const sunlight = new DirectionalLight(0xffffff, 1);
+    game.activeScene.add(sunlight);
+
+    const background = createSprite({
+      colorMap: "assets/training.webp",
+      tileSize: new Vector2(1, 1),
     });
+    background.position.z = -1;
+    background.position.y = 0.3;
+    background.scale.multiplyScalar(3);
+    background.scale.x *= 2;
+    game.activeScene.add(background);
+
+    game.mainCamera.position.y = 0.25;
   }
 
   render() {

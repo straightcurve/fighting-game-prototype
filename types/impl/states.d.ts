@@ -29,7 +29,7 @@ export declare class WalkState implements State {
 }
 export declare class WalkBackState implements State {
     enter(character: FGCharacter): void;
-    exit(): void;
+    exit(character: FGCharacter): void;
     handle(character: FGCharacter): State | null;
     update(dt: f32, character: FGCharacter): void;
 }
@@ -53,4 +53,10 @@ export declare class ChargeState implements State {
     exit(character: FGCharacter): void;
     handle(_character: FGCharacter): State | null;
     update(dt: f32, character: FGCharacter): void;
+}
+export declare class BlockState implements State {
+    enter(character: FGCharacter): void;
+    exit(character: FGCharacter): void;
+    handle(character: FGCharacter): State | null;
+    update(_dt: f32, _character: FGCharacter): void;
 }

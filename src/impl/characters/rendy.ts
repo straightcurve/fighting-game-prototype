@@ -6,7 +6,8 @@ export const Rendy: Character = {
   maxHealth: 200,
   hurtbox: new Vector2(0.3, 0.65),
   sprite: {
-    spritePath: "assets/Rendy.png",
+    alphaMap: "assets/Tony.alpha.png",
+    colorMap: "assets/Rendy.png",
     tileSize: new Vector2(36, 16),
   },
   lightAttack: {
