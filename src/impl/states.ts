@@ -14,6 +14,8 @@ import { createSprite, Sprite } from "../lib/sprite";
 import { f32, i32 } from "../lib/types";
 import { getRoot, overlap } from "../lib/utils";
 import {
+  block,
+  blockLeft,
   die,
   dieLeft,
   idle,
@@ -30,7 +32,7 @@ export class IdleState implements State {
     else character.play(idleLeft);
   }
 
-  public exit() {}
+  public exit() { }
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
@@ -48,7 +50,7 @@ export class IdleState implements State {
     return null;
   }
 
-  public update(_dt: f32, _character: FGCharacter) {}
+  public update(_dt: f32, _character: FGCharacter) { }
 }
 
 export class PunchState implements State {
@@ -83,7 +85,7 @@ export class PunchState implements State {
     this.ignore.push(character.hurtbox);
   }
 
-  public exit(_character: FGCharacter) {}
+  public exit(_character: FGCharacter) { }
 
   public handle(_character: FGCharacter): State | null {
     if (this.frameData.recovery <= 0) return new IdleState();
@@ -130,7 +132,7 @@ export class WalkState implements State {
     else character.play(walkLeft);
   }
 
-  public exit() {}
+  public exit() { }
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
@@ -156,11 +158,15 @@ export class WalkState implements State {
 
 export class WalkBackState implements State {
   public enter(character: FGCharacter) {
+    character.isBlocking = true;
+
     if (character.facingRight) character.play(walkBack);
     else character.play(walkBackLeft);
   }
 
-  public exit() {}
+  public exit(character: FGCharacter) {
+    character.isBlocking = false;
+  }
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
@@ -190,13 +196,13 @@ export class DeathState implements State {
     else character.play(dieLeft);
   }
 
-  public exit() {}
+  public exit() { }
 
   public handle(_character: FGCharacter): State | null {
     return null;
   }
 
-  public update(_dt: f32, _character: FGCharacter) {}
+  public update(_dt: f32, _character: FGCharacter) { }
 }
 
 export class ChargeState implements State {
@@ -314,4 +320,34 @@ export class ChargeState implements State {
       character.sprite.remove(this.rock);
     }
   }
+}
+
+export class BlockState implements State {
+  public enter(character: FGCharacter) {
+    character.isBlocking = true;
+    if (character.facingRight) character.play(block);
+    else character.play(blockLeft);
+  }
+
+  public exit(character: FGCharacter) { 
+    character.isBlocking = false;
+  }
+
+  public handle(character: FGCharacter): State | null {
+    if (character.actionMap.LightAttack.triggered) return new PunchState();
+    if (character.data.chargeAttack)
+      if (character.actionMap.LightAttack.held) return new ChargeState();
+
+    if (character.facingRight) {
+      if (character.actionMap.Left.held) return null;
+      if (character.actionMap.Right.held) return new WalkState();
+    } else {
+      if (character.actionMap.Left.held) return new WalkState();
+      if (character.actionMap.Right.held) return null;
+    }
+
+    return new IdleState();
+  }
+
+  public update(_dt: f32, _character: FGCharacter) { }
 }

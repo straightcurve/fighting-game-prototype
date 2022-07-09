@@ -1,7 +1,7 @@
 import { BoxBufferGeometry, Mesh, MeshBasicMaterial } from "three";
 import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
-import { DeathState, IdleState } from "../impl/states";
+import { BlockState, DeathState, IdleState } from "../impl/states";
 import { AnimationClip, AnimationComponent } from "./animation";
 import { ActionMap } from "./input";
 import { Sprite } from "./sprite";
@@ -52,6 +52,7 @@ export class FGCharacter {
 
   public health: f32;
   public facingRight: boolean;
+  public isBlocking: boolean;
 
   constructor({
     animator,
@@ -88,6 +89,8 @@ export class FGCharacter {
     this.hurtbox.userData.character = this;
     this.sprite.userData.character = this;
     this.hurtbox.name = data.name;
+
+    this.isBlocking = false;
   }
 
   public handle() {
@@ -110,6 +113,10 @@ export class FGCharacter {
 
   public takeDamage(amount: f32) {
     if (this.health <= 0) return;
+    if (this.isBlocking) {
+      this.brain.change(new BlockState());
+      return;
+    }
 
     this.health -= amount;
     if (this.health <= 0) {
