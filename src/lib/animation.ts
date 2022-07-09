@@ -1,3 +1,4 @@
+import { MeshToonMaterial } from "three";
 import { f32, i32 } from "../lib/types";
 import { FGCharacter } from "./character";
 
@@ -27,7 +28,9 @@ export function runAnimationSystem(dt: number, characters: FGCharacter[]) {
 
     const offsetX = (ct % th) / th;
     const offsetY = (tv - Math.floor(ct / th) - 1) / tv;
-    sprite.material.map?.offset.set(offsetX, offsetY);
+    if (Array.isArray(sprite.material)) return;
+
+    (sprite.material as MeshToonMaterial).map?.offset.set(offsetX, offsetY);
 
     animator.elapsed += dt;
 

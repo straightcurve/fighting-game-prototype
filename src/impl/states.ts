@@ -32,7 +32,7 @@ export class IdleState implements State {
     else character.play(idleLeft);
   }
 
-  public exit() { }
+  public exit() {}
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
@@ -50,7 +50,7 @@ export class IdleState implements State {
     return null;
   }
 
-  public update(_dt: f32, _character: FGCharacter) { }
+  public update(_dt: f32, _character: FGCharacter) {}
 }
 
 export class PunchState implements State {
@@ -85,7 +85,7 @@ export class PunchState implements State {
     this.ignore.push(character.hurtbox);
   }
 
-  public exit(_character: FGCharacter) { }
+  public exit(_character: FGCharacter) {}
 
   public handle(_character: FGCharacter): State | null {
     if (this.frameData.recovery <= 0) return new IdleState();
@@ -132,7 +132,7 @@ export class WalkState implements State {
     else character.play(walkLeft);
   }
 
-  public exit() { }
+  public exit() {}
 
   public handle(character: FGCharacter): State | null {
     if (character.actionMap.LightAttack.triggered) return new PunchState();
@@ -196,13 +196,13 @@ export class DeathState implements State {
     else character.play(dieLeft);
   }
 
-  public exit() { }
+  public exit() {}
 
   public handle(_character: FGCharacter): State | null {
     return null;
   }
 
-  public update(_dt: f32, _character: FGCharacter) { }
+  public update(_dt: f32, _character: FGCharacter) {}
 }
 
 export class ChargeState implements State {
@@ -279,8 +279,10 @@ export class ChargeState implements State {
     const ca = character.data.chargeAttack;
     if (!ca) throw new Error("no charge attack");
 
-    this.rock.material.opacity =
-      (ca.startup - this.frameData.startup) / ca.startup;
+    const opacity = (ca.startup - this.frameData.startup) / ca.startup;
+    if (Array.isArray(this.rock.material))
+      this.rock.material.forEach((m) => (m.opacity = opacity));
+    else this.rock.material.opacity = opacity;
 
     if (this.frameData.startup > 0) this.frameData.startup--;
     else if (this.frameData.active > 0) {
@@ -329,7 +331,7 @@ export class BlockState implements State {
     else character.play(blockLeft);
   }
 
-  public exit(character: FGCharacter) { 
+  public exit(character: FGCharacter) {
     character.isBlocking = false;
   }
 
@@ -349,5 +351,5 @@ export class BlockState implements State {
     return new IdleState();
   }
 
-  public update(_dt: f32, _character: FGCharacter) { }
+  public update(_dt: f32, _character: FGCharacter) {}
 }

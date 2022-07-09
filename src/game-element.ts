@@ -13,7 +13,7 @@ import { ActionTrigger, KeyboardActionTrigger } from "./lib/input";
 import { P1Controls, P2Controls } from "./impl/controls";
 import { Tony } from "./impl/characters/tony";
 import { Rendy } from "./impl/characters/rendy";
-import { DirectionalLight, Vector2, Vector3 } from "three";
+import { DirectionalLight, Vector2 } from "three";
 
 @customElement("game-element")
 export class GameElement extends LitElement {
