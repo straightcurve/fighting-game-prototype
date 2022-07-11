@@ -4,3 +4,4 @@ export declare function overlap(hitbox: Mesh, hurtboxes: Mesh[], ignore?: Mesh[]
 export declare function overlapBox(hitbox: Mesh, hurtbox: Mesh): boolean;
 export declare function getRoot(object: Object3D): Object3D<import("three").Event>;
 export declare function degToRad(degrees: f32): number;
+export declare function delay(ms: f32): Promise<unknown>;

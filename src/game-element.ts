@@ -85,15 +85,17 @@ export class GameElement extends LitElement {
       }
     };
 
-    game.systems.push((dt: f32) => {
-      for (let pi = 0; pi < game.players.length; pi++) {
-        const p = game.players[pi];
-        p.brain.update(dt);
-      }
-    });
+    // game.systems.push((dt: f32) => {
+    //   for (let pi = 0; pi < game.players.length; pi++) {
+    //     const p = game.players[pi];
+    //     p.brain.update(dt);
+    //   }
+    // });
 
     game.systems.push((dt: f32) => {
       runAnimationSystem(dt, [p1, p2]);
+
+      for (const p of [p1, p2]) p.bt.update();
     });
 
     // const controls = new OrbitControls(

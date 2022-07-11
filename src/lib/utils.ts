@@ -7,7 +7,6 @@ export function overlap(hitbox: Mesh, hurtboxes: Mesh[], ignore: Mesh[] = []) {
     if (overlapBox(hitbox, hurtbox) && ignore.indexOf(hurtbox) === -1)
       return hurtbox;
   }
-
   return null;
 }
 
@@ -36,4 +35,8 @@ export function getRoot(object: Object3D) {
 
 export function degToRad(degrees: f32) {
   return (degrees * Math.PI) / 180;
+}
+
+export function delay(ms: f32) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

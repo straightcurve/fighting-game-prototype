@@ -45,3 +45,31 @@ export function createSprite({
 
   return sprite;
 }
+
+export function createSpriteFallback({
+  colorMap,
+  tileSize,
+}: {
+  colorMap: string;
+  tileSize: THREE.Vector2;
+}): Sprite {
+  const map = new THREE.TextureLoader().load(colorMap);
+  map.magFilter = THREE.NearestFilter;
+
+  const material = new THREE.SpriteMaterial({
+    map,
+  });
+
+  const sprite = new THREE.Sprite(material);
+
+  sprite.userData.atlas = {
+    tileSize: tileSize.clone(),
+  };
+  map.repeat.set(
+    1 / sprite.userData.atlas.tileSize.x,
+    1 / sprite.userData.atlas.tileSize.y
+  );
+
+  //@ts-ignore
+  return sprite;
+}

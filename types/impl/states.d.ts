@@ -1,7 +1,8 @@
 import { Mesh } from "three";
-import { FGCharacter, State } from "../lib/character";
+import { FGCharacter } from "../lib/character";
 import { Sprite } from "../lib/sprite";
 import { f32, i32 } from "../lib/types";
+export declare type State = {};
 export declare class IdleState implements State {
     enter(character: FGCharacter): void;
     exit(): void;

@@ -1,48 +1,15 @@
 import { BoxBufferGeometry, Mesh, MeshBasicMaterial } from "three";
+import { PlayerBehaviorTree } from "../impl/behaviors/player.tree";
 import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
-import { BlockState, DeathState, IdleState } from "../impl/states";
 import { AnimationClip, AnimationComponent } from "./animation";
+import { BehaviorTree } from "./behavior-trees/tree";
 import { ActionMap } from "./input";
 import { Sprite } from "./sprite";
 import { f32 } from "./types";
 
-export interface State {
-  enter: (character: FGCharacter) => void;
-  exit: (character: FGCharacter) => void;
-  handle(character: FGCharacter): State | null;
-  update: (dt: f32, character: FGCharacter) => void;
-}
-
-export class StateMachine {
-  constructor(private character: FGCharacter) {}
-
-  public current: State | null = null;
-
-  public change(state: State | null) {
-    console.log(state);
-    if (this.current) this.current.exit(this.character);
-    this.current = state;
-    if (this.current) this.current.enter(this.character);
-  }
-
-  public handle() {
-    if (!this.current) return;
-
-    const state = this.current.handle(this.character);
-    if (state === null) return;
-
-    this.change(state);
-  }
-
-  public update(dt: f32) {
-    if (this.current) this.current.update(dt, this.character);
-  }
-}
-
 export class FGCharacter {
   public animator: AnimationComponent;
-  public brain: StateMachine;
   public sprite: Sprite;
 
   public actionMap: ActionMap;
@@ -53,6 +20,8 @@ export class FGCharacter {
   public health: f32;
   public facingRight: boolean;
   public isBlocking: boolean;
+
+  public bt: BehaviorTree;
 
   constructor({
     animator,
@@ -70,9 +39,6 @@ export class FGCharacter {
     this.animator = animator || { frame: 0, elapsed: 0 };
     this.sprite = sprite;
     this.facingRight = facingRight;
-    this.brain = new StateMachine(this);
-    this.brain.current = new IdleState();
-    this.brain.current.enter(this);
     this.actionMap = actionMap;
     this.data = data;
     this.health = data.maxHealth;
@@ -91,10 +57,9 @@ export class FGCharacter {
     this.hurtbox.name = data.name;
 
     this.isBlocking = false;
-  }
 
-  public handle() {
-    this.brain.handle();
+    this.bt = new PlayerBehaviorTree(this);
+    this.bt.start();
   }
 
   public play(clip: AnimationClip) {
@@ -114,13 +79,13 @@ export class FGCharacter {
   public takeDamage(amount: f32) {
     if (this.health <= 0) return;
     if (this.isBlocking) {
-      this.brain.change(new BlockState());
+      //        TODO: add blocking
       return;
     }
 
     this.health -= amount;
     if (this.health <= 0) {
-      this.brain.change(new DeathState());
+      //        TODO: add death
     }
   }
 }

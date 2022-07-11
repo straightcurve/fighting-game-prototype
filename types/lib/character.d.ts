@@ -2,26 +2,12 @@ import { Mesh } from "three";
 import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
+import { BehaviorTree } from "./behavior-trees/tree";
 import { ActionMap } from "./input";
 import { Sprite } from "./sprite";
 import { f32 } from "./types";
-export interface State {
-    enter: (character: FGCharacter) => void;
-    exit: (character: FGCharacter) => void;
-    handle(character: FGCharacter): State | null;
-    update: (dt: f32, character: FGCharacter) => void;
-}
-export declare class StateMachine {
-    private character;
-    constructor(character: FGCharacter);
-    current: State | null;
-    change(state: State | null): void;
-    handle(): void;
-    update(dt: f32): void;
-}
 export declare class FGCharacter {
     animator: AnimationComponent;
-    brain: StateMachine;
     sprite: Sprite;
     actionMap: ActionMap;
     data: Character;
@@ -30,6 +16,7 @@ export declare class FGCharacter {
     health: f32;
     facingRight: boolean;
     isBlocking: boolean;
+    bt: BehaviorTree;
     constructor({ animator, data, sprite, actionMap, facingRight, }: {
         animator?: AnimationComponent;
         data: Character;
@@ -37,7 +24,6 @@ export declare class FGCharacter {
         actionMap: ActionMap;
         facingRight?: boolean;
     });
-    handle(): void;
     play(clip: AnimationClip): void;
     takeDamage(amount: f32): void;
 }

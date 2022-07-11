@@ -9,7 +9,7 @@ import {
   Vector2,
   VideoTexture,
 } from "three";
-import { FGCharacter, State } from "../lib/character";
+import { FGCharacter } from "../lib/character";
 import { createSprite, Sprite } from "../lib/sprite";
 import { f32, i32 } from "../lib/types";
 import { getRoot, overlap } from "../lib/utils";
@@ -25,6 +25,8 @@ import {
   walkBackLeft,
   walkLeft,
 } from "./clips";
+
+export type State = {};
 
 export class IdleState implements State {
   public enter(character: FGCharacter) {

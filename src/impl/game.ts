@@ -68,8 +68,6 @@ export class FGame extends Game {
 
         if (attemptedPause) this.paused = !this.paused;
       }
-
-      p.brain.handle();
     }
 
     this.gui.forEach((gui) => {
@@ -104,6 +102,29 @@ export class FGame extends Game {
     for (let si = 0; si < this.systems.length; si++) {
       const run = this.systems[si];
       run(dt);
+    }
+
+    this.gui.forEach((gui) => {
+      gui.left.triggered.updateDisplay();
+      gui.left.held.updateDisplay();
+      gui.right.triggered.updateDisplay();
+      gui.right.held.updateDisplay();
+      gui.lightAttack.triggered.updateDisplay();
+      gui.lightAttack.held.updateDisplay();
+      gui.start.triggered.updateDisplay();
+      gui.start.held.updateDisplay();
+      gui.animator.frame.updateDisplay();
+    });
+
+    //  consume inputs to avoid weird requestAnimationFrame bugs
+    for (let pi = 0; pi < this.players.length; pi++) {
+      const p = this.players[pi];
+      for (const a in p.actionMap) {
+        //@ts-ignore
+        const trigger: ActionTrigger = p.actionMap[a];
+        if (trigger.triggered) trigger.held = true;
+        trigger.triggered = false;
+      }
     }
   }
 }

@@ -18,8 +18,6 @@ export abstract class Game {
   public loop() {
     const dt = this.clock.getDelta();
 
-    this.handleInput();
-
     this.acc += dt;
     while (this.acc >= this.fps) {
       this.acc -= this.fps;
