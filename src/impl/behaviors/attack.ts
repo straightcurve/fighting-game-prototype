@@ -18,9 +18,11 @@ export abstract class TaskAttack extends Node {
   public override evaluate() {
     if (!this.shouldEvaluate()) return NodeState.Failure;
 
+    console.log("before update..", this.constructor.name);
     this.beforeUpdate();
 
     if (this.cf === 0) {
+      console.log("cf 0..", this.constructor.name);
       this.cf =
         this.frameData.startup +
         this.frameData.active +

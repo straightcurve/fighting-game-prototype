@@ -89,6 +89,8 @@ export class TaskRockThrow extends TaskAttack {
     });
     this.rock.position.y = 0.75;
     character.sprite.add(this.rock);
+
+    console.log("initialized..", this.constructor.name);
   }
 
   public override update(): void {
