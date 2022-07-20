@@ -13,7 +13,8 @@ import { ActionTrigger, KeyboardActionTrigger } from "./lib/input";
 import { P1Controls, P2Controls } from "./impl/controls";
 import { Tony } from "./impl/characters/tony";
 import { Rendy } from "./impl/characters/rendy";
-import { DirectionalLight, Vector2 } from "three";
+import { DirectionalLight, Vector2, Vector3 } from "three";
+import { nextFrame } from "./lib/time";
 
 @customElement("game-element")
 export class GameElement extends LitElement {
@@ -53,10 +54,11 @@ export class GameElement extends LitElement {
     game.activeScene.add(p1.sprite, p2.sprite);
 
     window.onkeydown = (ev) => {
-      const check = (trigger: ActionTrigger) => {
+      const check = (trigger: ActionTrigger, player: FGCharacter) => {
         const t = trigger as KeyboardActionTrigger;
         if (t.held) return;
         t.triggered = t.key === ev.key;
+        if (t.process) t.process(player);
       };
 
       for (let pi = 0; pi < game.players.length; pi++) {
@@ -64,7 +66,7 @@ export class GameElement extends LitElement {
         for (const a in p.actionMap) {
           //@ts-ignore
           const trigger: ActionTrigger = p.actionMap[a];
-          check(trigger);
+          check(trigger, p);
         }
       }
     };
@@ -85,17 +87,23 @@ export class GameElement extends LitElement {
       }
     };
 
-    // game.systems.push((dt: f32) => {
-    //   for (let pi = 0; pi < game.players.length; pi++) {
-    //     const p = game.players[pi];
-    //     p.brain.update(dt);
-    //   }
-    // });
+    const isFacingRight = (source: FGCharacter, other: FGCharacter) =>
+      source.sprite
+        .getWorldPosition(new Vector3())
+        .sub(other.sprite.getWorldPosition(new Vector3())).x < 0;
 
     game.systems.push((dt: f32) => {
+      p1.facingRight = isFacingRight(p1, p2);
+      p2.facingRight = isFacingRight(p2, p1);
+
       runAnimationSystem(dt, [p1, p2]);
 
-      for (const p of [p1, p2]) p.bt.update();
+      for (const p of [p1, p2]) {
+        p.ib.read(p.actionMap);
+        p.bt.update();
+      }
+
+      nextFrame();
     });
 
     // const controls = new OrbitControls(

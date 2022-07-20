@@ -15,12 +15,9 @@ export class PlayerBehaviorTree extends BehaviorTree {
 
   protected override setup(): Node {
     let root = new Selector([
-      new Selector([
-        //      TODO: implement input buffer
-        //@ts-ignore
-        new TaskRockThrow(this.character.data.chargeAttack),
-        new TaskPunch(this.character.data.lightAttack),
-      ]),
+      //@ts-ignore
+      new TaskRockThrow(this.character.data.chargeAttack),
+      new TaskPunch(this.character.data.lightAttack),
       new TaskWalk(),
       new TaskWalkBack(),
       new TaskIdle(),

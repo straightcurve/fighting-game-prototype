@@ -10,7 +10,8 @@ import {
   VideoTexture,
 } from "three";
 import { FGCharacter } from "../../lib/character";
-import { createSprite, createSpriteFallback, Sprite } from "../../lib/sprite";
+import { CommandType } from "../../lib/input";
+import { createSpriteFallback, Sprite } from "../../lib/sprite";
 import { dt } from "../../lib/time";
 import { getRoot, overlap } from "../../lib/utils";
 import { TaskAttack } from "./attack";
@@ -25,7 +26,11 @@ export class TaskRockThrow extends TaskAttack {
     const character = this.getData<FGCharacter>("character");
     if (character === null) return false;
 
-    if (character.actionMap.LightAttack.held) this.isAttacking = true;
+    const [command, indexes] = character.ib.match();
+    if (command && command.type === CommandType.FL) {
+      this.isAttacking = true;
+      character.ib.clear(indexes);
+    }
 
     return this.isAttacking;
   }
@@ -82,6 +87,7 @@ export class TaskRockThrow extends TaskAttack {
 
     this.cast = cast;
 
+    while (this.ignore.length) this.ignore.shift();
     this.ignore.push(character.hurtbox);
     this.rock = createSpriteFallback({
       colorMap: "assets/rock.png",
@@ -89,8 +95,6 @@ export class TaskRockThrow extends TaskAttack {
     });
     this.rock.position.y = 0.75;
     character.sprite.add(this.rock);
-
-    console.log("initialized..", this.constructor.name);
   }
 
   public override update(): void {

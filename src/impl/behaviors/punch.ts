@@ -1,5 +1,6 @@
 import { BoxBufferGeometry, Mesh, MeshBasicMaterial } from "three";
 import { FGCharacter } from "../../lib/character";
+import { CommandType } from "../../lib/input";
 import { getRoot, overlap } from "../../lib/utils";
 import { TaskAttack } from "./attack";
 
@@ -11,7 +12,11 @@ export class TaskPunch extends TaskAttack {
     const character = this.getData<FGCharacter>("character");
     if (character === null) return false;
 
-    if (character.actionMap.LightAttack.triggered) this.isAttacking = true;
+    const [command, indexes] = character.ib.match();
+    if (command && command.type === CommandType.L) {
+      this.isAttacking = true;
+      character.ib.clear(indexes);
+    }
 
     return this.isAttacking;
   }
@@ -34,6 +39,7 @@ export class TaskPunch extends TaskAttack {
     this.hitbox.name = `${character.data.name} punch hitbox`;
     character.sprite.add(this.hitbox);
 
+    while (this.ignore.length) this.ignore.shift();
     this.ignore.push(character.hurtbox);
   }
 

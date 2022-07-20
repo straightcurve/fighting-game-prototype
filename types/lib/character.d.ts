@@ -3,7 +3,7 @@ import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
 import { BehaviorTree } from "./behavior-trees/tree";
-import { ActionMap } from "./input";
+import { ActionMap, InputBuffer } from "./input";
 import { Sprite } from "./sprite";
 import { f32 } from "./types";
 export declare class FGCharacter {
@@ -17,6 +17,7 @@ export declare class FGCharacter {
     facingRight: boolean;
     isBlocking: boolean;
     bt: BehaviorTree;
+    ib: InputBuffer;
     constructor({ animator, data, sprite, actionMap, facingRight, }: {
         animator?: AnimationComponent;
         data: Character;

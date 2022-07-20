@@ -4,7 +4,7 @@ import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
 import { BehaviorTree } from "./behavior-trees/tree";
-import { ActionMap } from "./input";
+import { ActionMap, CommandType, InputBuffer, InputType } from "./input";
 import { Sprite } from "./sprite";
 import { f32 } from "./types";
 
@@ -22,6 +22,7 @@ export class FGCharacter {
   public isBlocking: boolean;
 
   public bt: BehaviorTree;
+  public ib: InputBuffer;
 
   constructor({
     animator,
@@ -60,6 +61,17 @@ export class FGCharacter {
 
     this.bt = new PlayerBehaviorTree(this);
     this.bt.start();
+
+    this.ib = new InputBuffer([
+      { type: CommandType.B, inputs: [InputType.Back], priority: 0 },
+      { type: CommandType.F, inputs: [InputType.Forward], priority: 0 },
+      { type: CommandType.L, inputs: [InputType.LightAttack], priority: 1 },
+      {
+        type: CommandType.FL,
+        inputs: [InputType.Forward, InputType.LightAttack],
+        priority: 2,
+      },
+    ]);
   }
 
   public play(clip: AnimationClip) {

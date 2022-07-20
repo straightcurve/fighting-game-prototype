@@ -1,5 +1,6 @@
 import { NodeState, Node } from "../../lib/behavior-trees/node";
 import { FGCharacter } from "../../lib/character";
+import { CommandType } from "../../lib/input";
 import { walkBack, walkBackLeft } from "../clips";
 
 export class TaskWalkBack extends Node {
@@ -7,10 +8,12 @@ export class TaskWalkBack extends Node {
     const character = this.getData<FGCharacter>("character");
     if (character === null) return NodeState.Failure;
 
-    if (!character.facingRight && !character.actionMap.Right.held)
-      return NodeState.Failure;
-    if (character.facingRight && !character.actionMap.Left.held)
-      return NodeState.Failure;
+    const [command, indexes] = character.ib.match();
+    if (command) {
+      if (command.type !== CommandType.B) return NodeState.Failure;
+
+      character.ib.clear(indexes);
+    } else return NodeState.Failure;
 
     if (character.facingRight) character.play(walkBack);
     else character.play(walkBackLeft);

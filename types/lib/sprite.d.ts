@@ -12,3 +12,7 @@ export declare function createSprite({ colorMap, alphaMap, tileSize, }: {
     alphaMap?: string;
     tileSize: THREE.Vector2;
 }): Sprite;
+export declare function createSpriteFallback({ colorMap, tileSize, }: {
+    colorMap: string;
+    tileSize: THREE.Vector2;
+}): Sprite;
