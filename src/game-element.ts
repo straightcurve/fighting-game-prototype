@@ -15,6 +15,8 @@ import { Tony } from "./impl/characters/tony";
 import { Rendy } from "./impl/characters/rendy";
 import { DirectionalLight, Vector2, Vector3 } from "three";
 import { nextFrame } from "./lib/time";
+import { TaskPunch } from "./impl/behaviors/punch";
+import { TaskRockThrow } from "./impl/behaviors/rock-throw";
 
 @customElement("game-element")
 export class GameElement extends LitElement {
@@ -37,6 +39,7 @@ export class GameElement extends LitElement {
       data: Tony,
       sprite: createSprite(Tony.sprite),
       actionMap: P1Controls,
+      abilities: [new TaskPunch(Tony.abilities[0])],
     });
 
     const p2 = new FGCharacter({
@@ -44,6 +47,10 @@ export class GameElement extends LitElement {
       sprite: createSprite(Rendy.sprite),
       actionMap: P2Controls,
       facingRight: false,
+      abilities: [
+        new TaskRockThrow(Rendy.abilities[1]),
+        new TaskPunch(Rendy.abilities[0]),
+      ],
     });
 
     p1.sprite.position.set(-0.5, 0, 0);

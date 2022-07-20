@@ -39,7 +39,7 @@ export class TaskRockThrow extends TaskAttack {
     const character = this.getData<FGCharacter>("character");
     if (character === null) return;
 
-    const ca = character.data.chargeAttack;
+    const ca = character.data.abilities[1];
     if (!ca) throw new Error("no charge attack");
 
     if (this.cf > 0) {
@@ -101,7 +101,7 @@ export class TaskRockThrow extends TaskAttack {
     const character = this.getData<FGCharacter>("character");
     if (character === null) return;
 
-    const ca = character.data.chargeAttack;
+    const ca = character.data.abilities[1];
     if (!ca) throw new Error("no charge attack");
 
     if (this.isActive()) {

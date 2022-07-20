@@ -15,6 +15,8 @@ export class TaskWalkBack extends Node {
       character.ib.clear(indexes);
     } else return NodeState.Failure;
 
+    character.isBlocking = true;
+
     if (character.facingRight) character.play(walkBack);
     else character.play(walkBackLeft);
 

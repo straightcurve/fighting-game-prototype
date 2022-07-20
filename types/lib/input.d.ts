@@ -1,3 +1,4 @@
+import { FGCharacter } from "./character";
 import { i32 } from "./types";
 /**
  * @deprecated
@@ -11,6 +12,7 @@ export declare type ActionTrigger = {
     triggered: boolean;
     held: boolean;
     data?: any;
+    process?: (character: FGCharacter) => void;
 };
 export declare type KeyboardActionTrigger = {
     key: string;

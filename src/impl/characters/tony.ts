@@ -1,4 +1,5 @@
 import { Vector2 } from "three";
+import { CommandType, InputType } from "../../lib/input";
 import { Character } from "./base";
 
 export const Tony: Character = {
@@ -10,36 +11,43 @@ export const Tony: Character = {
     colorMap: "assets/Tony.png",
     tileSize: new Vector2(36, 16),
   },
-  lightAttack: {
-    clip: {
-      loop: false,
-      //@ts-ignore
-      start: {
-        right: 72,
-        left: 72 + 36,
+  abilities: [
+    {
+      clip: {
+        loop: false,
+        //@ts-ignore
+        start: {
+          right: 72,
+          left: 72 + 36,
+        },
+        length: 1,
+        get fps() {
+          const la = Tony.abilities[0];
+          return la.clip.length / (la.startup + la.active + la.recovery);
+        },
       },
-      length: 1,
-      get fps() {
-        const la = Tony.lightAttack;
-        return la.clip.length / (la.startup + la.active + la.recovery);
+      startup: 5,
+      active: 3,
+      recovery: 8,
+      hitbox: [
+        {
+          position: new Vector2(0.185),
+          size: new Vector2(0.3, 0.2),
+        },
+        {
+          position: new Vector2(0.185),
+          size: new Vector2(0.3, 0.2),
+        },
+        {
+          position: new Vector2(0.185),
+          size: new Vector2(0.3, 0.2),
+        },
+      ],
+      command: {
+        type: CommandType.L,
+        inputs: [InputType.LightAttack],
+        priority: 1,
       },
     },
-    startup: 5,
-    active: 3,
-    recovery: 8,
-    hitbox: [
-      {
-        position: new Vector2(0.185),
-        size: new Vector2(0.3, 0.2),
-      },
-      {
-        position: new Vector2(0.185),
-        size: new Vector2(0.3, 0.2),
-      },
-      {
-        position: new Vector2(0.185),
-        size: new Vector2(0.3, 0.2),
-      },
-    ],
-  },
+  ],
 };

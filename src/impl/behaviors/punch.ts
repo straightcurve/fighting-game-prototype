@@ -27,7 +27,7 @@ export class TaskPunch extends TaskAttack {
     const character = this.getData<FGCharacter>("character");
     if (character === null) return;
 
-    const la = character.data.lightAttack;
+    const la = character.data.abilities[0];
     character.play(la.clip);
 
     let colliderGeo = new BoxBufferGeometry(0, 0, 0);
@@ -48,7 +48,9 @@ export class TaskPunch extends TaskAttack {
     if (character === null) return;
 
     if (this.isActive()) {
-      const la = character.data.lightAttack;
+      const la = character.data.abilities[0];
+      if (!la.hitbox) return;
+
       const hitbox = la.hitbox[this.cf - this.frameData.recovery - 1];
       const geo = new BoxBufferGeometry(hitbox.size.x, hitbox.size.y, 0);
       this.hitbox.geometry = geo;

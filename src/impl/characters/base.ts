@@ -1,6 +1,16 @@
 import { Vector2 } from "three";
 import { AnimationClip } from "../../lib/animation";
+import { Command } from "../../lib/input";
 import { f32, i32 } from "../../lib/types";
+
+export type Ability = {
+  startup: i32;
+  active: i32;
+  recovery: i32;
+  hitbox?: { position: Vector2; size: Vector2 }[];
+  clip: AnimationClip;
+  command: Command;
+};
 
 export type Character = {
   name: string;
@@ -12,18 +22,5 @@ export type Character = {
     tileSize: Vector2;
   };
 
-  lightAttack: {
-    startup: i32;
-    active: i32;
-    recovery: i32;
-    hitbox: { position: Vector2; size: Vector2 }[];
-    clip: AnimationClip;
-  };
-
-  chargeAttack?: {
-    startup: i32;
-    active: i32;
-    recovery: i32;
-    clip: AnimationClip;
-  };
+  abilities: Ability[];
 };

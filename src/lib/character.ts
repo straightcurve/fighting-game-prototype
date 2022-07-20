@@ -3,10 +3,11 @@ import { PlayerBehaviorTree } from "../impl/behaviors/player.tree";
 import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
+import { Node } from "./behavior-trees/node";
 import { BehaviorTree } from "./behavior-trees/tree";
 import { ActionMap, CommandType, InputBuffer, InputType } from "./input";
 import { Sprite } from "./sprite";
-import { f32 } from "./types";
+import { f32, i32 } from "./types";
 
 export class FGCharacter {
   public animator: AnimationComponent;
@@ -20,6 +21,7 @@ export class FGCharacter {
   public health: f32;
   public facingRight: boolean;
   public isBlocking: boolean;
+  public blockstun: i32 = 0;
 
   public bt: BehaviorTree;
   public ib: InputBuffer;
@@ -30,12 +32,14 @@ export class FGCharacter {
     sprite,
     actionMap,
     facingRight = true,
+    abilities,
   }: {
     animator?: AnimationComponent;
     data: Character;
     sprite: Sprite;
     actionMap: ActionMap;
     facingRight?: boolean;
+    abilities?: Node[];
   }) {
     this.animator = animator || { frame: 0, elapsed: 0 };
     this.sprite = sprite;
@@ -59,19 +63,22 @@ export class FGCharacter {
 
     this.isBlocking = false;
 
-    this.bt = new PlayerBehaviorTree(this);
+    this.bt = new PlayerBehaviorTree(this, abilities);
     this.bt.start();
 
     this.ib = new InputBuffer([
       { type: CommandType.B, inputs: [InputType.Back], priority: 0 },
       { type: CommandType.F, inputs: [InputType.Forward], priority: 0 },
-      { type: CommandType.L, inputs: [InputType.LightAttack], priority: 1 },
+
+      ...data.abilities.map((a) => a.command),
+    ]);
+    [
       {
         type: CommandType.FL,
         inputs: [InputType.Forward, InputType.LightAttack],
         priority: 2,
       },
-    ]);
+    ];
   }
 
   public play(clip: AnimationClip) {
@@ -91,13 +98,10 @@ export class FGCharacter {
   public takeDamage(amount: f32) {
     if (this.health <= 0) return;
     if (this.isBlocking) {
-      //        TODO: add blocking
+      this.blockstun = 12;
       return;
     }
 
     this.health -= amount;
-    if (this.health <= 0) {
-      //        TODO: add death
-    }
   }
 }
