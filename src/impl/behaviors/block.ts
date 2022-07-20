@@ -40,6 +40,7 @@ export class TaskBlock extends Node {
     }
 
     character.blockstun--;
+    character.isBlocking = true;
 
     return NodeState.Success;
   }
