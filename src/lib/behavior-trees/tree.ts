@@ -1,7 +1,7 @@
 import { Node } from "./node";
 
 export abstract class BehaviorTree {
-  private root!: Node;
+  protected root!: Node;
 
   public start() {
     this.root = this.setup();

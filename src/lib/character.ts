@@ -3,8 +3,6 @@ import { PlayerBehaviorTree } from "../impl/behaviors/player.tree";
 import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
-import { Node } from "./behavior-trees/node";
-import { BehaviorTree } from "./behavior-trees/tree";
 import { ActionMap, CommandType, InputBuffer, InputType } from "./input";
 import { Sprite } from "./sprite";
 import { f32, i32 } from "./types";
@@ -23,7 +21,7 @@ export class FGCharacter {
   public isBlocking: boolean;
   public blockstun: i32 = 0;
 
-  public bt: BehaviorTree;
+  public bt: PlayerBehaviorTree;
   public ib: InputBuffer;
 
   constructor({
@@ -32,14 +30,14 @@ export class FGCharacter {
     sprite,
     actionMap,
     facingRight = true,
-    abilities,
+    behaviorTree,
   }: {
     animator?: AnimationComponent;
     data: Character;
     sprite: Sprite;
     actionMap: ActionMap;
+    behaviorTree: PlayerBehaviorTree;
     facingRight?: boolean;
-    abilities?: Node[];
   }) {
     this.animator = animator || { frame: 0, elapsed: 0 };
     this.sprite = sprite;
@@ -63,8 +61,9 @@ export class FGCharacter {
 
     this.isBlocking = false;
 
-    this.bt = new PlayerBehaviorTree(this, abilities);
+    this.bt = behaviorTree;
     this.bt.start();
+    this.bt.setCharacter(this);
 
     this.ib = new InputBuffer([
       { type: CommandType.B, inputs: [InputType.Back], priority: 0 },
@@ -72,13 +71,6 @@ export class FGCharacter {
 
       ...data.abilities.map((a) => a.command),
     ]);
-    [
-      {
-        type: CommandType.FL,
-        inputs: [InputType.Forward, InputType.LightAttack],
-        priority: 2,
-      },
-    ];
   }
 
   public play(clip: AnimationClip) {

@@ -1,6 +1,23 @@
 import { Vector2 } from "three";
-import { CommandType, InputType } from "../../lib/input";
 import { Character } from "./base";
+import { Node } from "../../lib/behavior-trees/node";
+import { Selector } from "../../lib/behavior-trees/selector";
+import { Sequence } from "../../lib/behavior-trees/sequence";
+import { ActionMap, CommandType, InputType } from "../../lib/input";
+import {
+  CheckIfBlockStun,
+  TaskBlock,
+  TaskClearBlock,
+} from "../behaviors/block";
+import { CheckIfDead, TaskDie } from "../behaviors/die";
+import { TaskIdle } from "../behaviors/idle";
+import { TaskPunch } from "../behaviors/punch";
+import { TaskWalk } from "../behaviors/walk";
+import { TaskWalkBack } from "../behaviors/walk-back";
+import { TaskRockThrow } from "../behaviors/rock-throw";
+import { PlayerBehaviorTree } from "../behaviors/player.tree";
+import { FGCharacter } from "../../lib/character";
+import { createSprite } from "../../lib/sprite";
 
 export const Rendy: Character = {
   name: "Rendy",
@@ -64,3 +81,29 @@ export const Rendy: Character = {
     },
   ],
 };
+
+export class RendyBehaviorTree extends PlayerBehaviorTree {
+  protected override setup(): Node {
+    return new Selector([
+      new TaskClearBlock(),
+      new Sequence([new CheckIfBlockStun(), new TaskBlock()]),
+      new Sequence([new CheckIfDead(), new TaskDie()]),
+      new Selector([
+        new TaskRockThrow(Rendy.abilities[1]),
+        new TaskPunch(Rendy.abilities[0]),
+      ]),
+      new TaskWalk(),
+      new TaskWalkBack(),
+      new TaskIdle(),
+    ]);
+  }
+}
+
+export function createRendyCharacter(actionMap: ActionMap) {
+  return new FGCharacter({
+    data: Rendy,
+    behaviorTree: new RendyBehaviorTree(),
+    sprite: createSprite(Rendy.sprite),
+    actionMap,
+  });
+}

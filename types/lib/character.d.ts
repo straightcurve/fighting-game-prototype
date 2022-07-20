@@ -1,9 +1,8 @@
 import { Mesh } from "three";
+import { PlayerBehaviorTree } from "../impl/behaviors/player.tree";
 import { Character } from "../impl/characters/base";
 import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
-import { Node } from "./behavior-trees/node";
-import { BehaviorTree } from "./behavior-trees/tree";
 import { ActionMap, InputBuffer } from "./input";
 import { Sprite } from "./sprite";
 import { f32, i32 } from "./types";
@@ -18,15 +17,15 @@ export declare class FGCharacter {
     facingRight: boolean;
     isBlocking: boolean;
     blockstun: i32;
-    bt: BehaviorTree;
+    bt: PlayerBehaviorTree;
     ib: InputBuffer;
-    constructor({ animator, data, sprite, actionMap, facingRight, abilities, }: {
+    constructor({ animator, data, sprite, actionMap, facingRight, behaviorTree, }: {
         animator?: AnimationComponent;
         data: Character;
         sprite: Sprite;
         actionMap: ActionMap;
+        behaviorTree: PlayerBehaviorTree;
         facingRight?: boolean;
-        abilities?: Node[];
     });
     play(clip: AnimationClip): void;
     takeDamage(amount: f32): void;

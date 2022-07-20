@@ -1,5 +1,21 @@
 import { Vector2 } from "three";
-import { CommandType, InputType } from "../../lib/input";
+import { Node } from "../../lib/behavior-trees/node";
+import { Selector } from "../../lib/behavior-trees/selector";
+import { Sequence } from "../../lib/behavior-trees/sequence";
+import { FGCharacter } from "../../lib/character";
+import { ActionMap, CommandType, InputType } from "../../lib/input";
+import { createSprite } from "../../lib/sprite";
+import {
+  CheckIfBlockStun,
+  TaskBlock,
+  TaskClearBlock,
+} from "../behaviors/block";
+import { CheckIfDead, TaskDie } from "../behaviors/die";
+import { TaskIdle } from "../behaviors/idle";
+import { PlayerBehaviorTree } from "../behaviors/player.tree";
+import { TaskPunch } from "../behaviors/punch";
+import { TaskWalk } from "../behaviors/walk";
+import { TaskWalkBack } from "../behaviors/walk-back";
 import { Character } from "./base";
 
 export const Tony: Character = {
@@ -51,3 +67,26 @@ export const Tony: Character = {
     },
   ],
 };
+
+export class TonyBehaviorTree extends PlayerBehaviorTree {
+  protected override setup(): Node {
+    return new Selector([
+      new TaskClearBlock(),
+      new Sequence([new CheckIfBlockStun(), new TaskBlock()]),
+      new Sequence([new CheckIfDead(), new TaskDie()]),
+      new Selector([new TaskPunch(Tony.abilities[0])]),
+      new TaskWalk(),
+      new TaskWalkBack(),
+      new TaskIdle(),
+    ]);
+  }
+}
+
+export function createTonyCharacter(actionMap: ActionMap) {
+  return new FGCharacter({
+    data: Tony,
+    behaviorTree: new TonyBehaviorTree(),
+    sprite: createSprite(Tony.sprite),
+    actionMap,
+  });
+}

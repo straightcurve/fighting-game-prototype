@@ -11,12 +11,10 @@ import { f32 } from "./lib/types";
 import { FGame } from "./impl/game";
 import { ActionTrigger, KeyboardActionTrigger } from "./lib/input";
 import { P1Controls, P2Controls } from "./impl/controls";
-import { Tony } from "./impl/characters/tony";
-import { Rendy } from "./impl/characters/rendy";
+import { createTonyCharacter } from "./impl/characters/tony";
+import { createRendyCharacter } from "./impl/characters/rendy";
 import { DirectionalLight, Vector2, Vector3 } from "three";
 import { nextFrame } from "./lib/time";
-import { TaskPunch } from "./impl/behaviors/punch";
-import { TaskRockThrow } from "./impl/behaviors/rock-throw";
 
 @customElement("game-element")
 export class GameElement extends LitElement {
@@ -35,23 +33,8 @@ export class GameElement extends LitElement {
   }
 
   private init(game: FGame) {
-    const p1 = new FGCharacter({
-      data: Tony,
-      sprite: createSprite(Tony.sprite),
-      actionMap: P1Controls,
-      abilities: [new TaskPunch(Tony.abilities[0])],
-    });
-
-    const p2 = new FGCharacter({
-      data: Rendy,
-      sprite: createSprite(Rendy.sprite),
-      actionMap: P2Controls,
-      facingRight: false,
-      abilities: [
-        new TaskRockThrow(Rendy.abilities[1]),
-        new TaskPunch(Rendy.abilities[0]),
-      ],
-    });
+    const p1 = createTonyCharacter(P1Controls);
+    const p2 = createRendyCharacter(P2Controls);
 
     p1.sprite.position.set(-0.5, 0, 0);
     p2.sprite.position.set(0.5, 0, 0);

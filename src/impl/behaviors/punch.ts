@@ -51,7 +51,7 @@ export class TaskPunch extends TaskAttack {
       const la = character.data.abilities[0];
       if (!la.hitbox) return;
 
-      const hitbox = la.hitbox[this.cf - this.frameData.recovery - 1];
+      const hitbox = la.hitbox[this.cf - this.ability.recovery - 1];
       const geo = new BoxBufferGeometry(hitbox.size.x, hitbox.size.y, 0);
       this.hitbox.geometry = geo;
 

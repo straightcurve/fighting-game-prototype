@@ -1,17 +1,12 @@
 import { NodeState, Node } from "../../lib/behavior-trees/node";
 import { i32 } from "../../lib/types";
+import { Ability } from "../characters/base";
 
 export abstract class TaskAttack extends Node {
   public cf: i32 = 0;
   public isAttacking: boolean = false;
 
-  constructor(
-    public frameData: {
-      startup: i32;
-      active: i32;
-      recovery: i32;
-    }
-  ) {
+  constructor(public ability: Ability) {
     super();
   }
 
@@ -22,9 +17,7 @@ export abstract class TaskAttack extends Node {
 
     if (this.cf === 0) {
       this.cf =
-        this.frameData.startup +
-        this.frameData.active +
-        this.frameData.recovery;
+        this.ability.startup + this.ability.active + this.ability.recovery;
     }
 
     this.cf--;
@@ -38,13 +31,13 @@ export abstract class TaskAttack extends Node {
 
   public isActive() {
     return (
-      this.cf <= this.frameData.recovery + this.frameData.active &&
-      this.cf > this.frameData.recovery
+      this.cf <= this.ability.recovery + this.ability.active &&
+      this.cf > this.ability.recovery
     );
   }
 
   public isRecovery() {
-    return this.cf <= this.frameData.recovery;
+    return this.cf <= this.ability.recovery;
   }
 
   public abstract beforeUpdate(): void;

@@ -44,7 +44,7 @@ export class TaskRockThrow extends TaskAttack {
 
     if (this.cf > 0) {
       if (this.rock) {
-        const opacity = (ca.startup - this.frameData.startup) / ca.startup;
+        const opacity = (ca.startup - this.ability.startup) / ca.startup;
         if (Array.isArray(this.rock.material))
           this.rock.material.forEach((m) => (m.opacity = opacity));
         else this.rock.material.opacity = opacity;
@@ -54,12 +54,6 @@ export class TaskRockThrow extends TaskAttack {
     if (this.cf > 0 || this.cf < 0) return;
 
     character.play(ca.clip);
-
-    this.frameData = {
-      startup: ca.startup,
-      active: ca.active,
-      recovery: ca.recovery,
-    };
 
     let video = document.createElement("video");
     video.src =
@@ -105,7 +99,7 @@ export class TaskRockThrow extends TaskAttack {
     if (!ca) throw new Error("no charge attack");
 
     if (this.isActive()) {
-      if (this.cf === this.frameData.active + this.frameData.recovery) {
+      if (this.cf === this.ability.active + this.ability.recovery) {
         let colliderGeo = new BoxBufferGeometry(1, 1, 0);
         let colliderMat = new MeshBasicMaterial({
           color: 0xff0000,
