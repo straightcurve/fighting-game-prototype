@@ -7,7 +7,6 @@ export declare abstract class Game {
     private acc;
     constructor();
     loop(): void;
-    abstract handleInput(): void;
     abstract render(): void;
     abstract update(dt: f32): void;
 }

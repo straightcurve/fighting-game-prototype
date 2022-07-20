@@ -1,6 +1,5 @@
 import { NodeState, Node } from "../../lib/behavior-trees/node";
 import { FGCharacter } from "../../lib/character";
-import { frame } from "../../lib/time";
 import { block, blockLeft } from "../clips";
 
 export class TaskClearBlock extends Node {

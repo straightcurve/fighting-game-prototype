@@ -1,7 +1,7 @@
 import { BoxBufferGeometry, Mesh, MeshBasicMaterial } from "three";
 import { PlayerBehaviorTree } from "../impl/behaviors/player.tree";
 import { Character } from "../impl/characters/base";
-import { FGame } from "../impl/game";
+import { FGame, GUICtrl } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
 import { ActionMap, CommandType, InputBuffer, InputType } from "./input";
 import { Sprite } from "./sprite";
@@ -23,6 +23,8 @@ export class FGCharacter {
 
   public bt: PlayerBehaviorTree;
   public ib: InputBuffer;
+
+  public gui: GUICtrl | null = null;
 
   constructor({
     animator,

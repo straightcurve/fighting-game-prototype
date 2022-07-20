@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { dt } from "./time";
 import { f32 } from "./types";
 
 export abstract class Game {
@@ -10,7 +11,7 @@ export abstract class Game {
 
   constructor() {
     this.clock = new THREE.Clock();
-    this.fps = 1 / 60;
+    this.fps = dt;
     this.acc = 0;
     this.paused = false;
   }
@@ -29,7 +30,6 @@ export abstract class Game {
     this.render();
   }
 
-  public abstract handleInput(): void;
   public abstract render(): void;
   public abstract update(dt: f32): void;
 }

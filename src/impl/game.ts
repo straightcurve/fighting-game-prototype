@@ -22,14 +22,13 @@ export class FGame extends Game {
       this.players.push(character);
       this.colliders.push(character.hurtbox);
       character.game = this;
-
-      this.gui.push(
-        createGUICtrl(
-          `P${this.players.length}`,
-          character,
-          getGUIPosition(this.players.length - 1)
-        )
+      character.gui = createGUICtrl(
+        `P${this.players.length}`,
+        character,
+        getGUIPosition(this.players.length - 1)
       );
+
+      this.gui.push(character.gui);
     });
   }
 
@@ -55,43 +54,6 @@ export class FGame extends Game {
     this.mainCamera = camera;
 
     this.systems = [];
-  }
-
-  public override handleInput(): void {
-    let attemptedPause = false;
-
-    for (let pi = 0; pi < this.players.length; pi++) {
-      const p = this.players[pi];
-
-      if (!attemptedPause) {
-        attemptedPause = attemptedPause || p.actionMap.Start.triggered;
-
-        if (attemptedPause) this.paused = !this.paused;
-      }
-    }
-
-    this.gui.forEach((gui) => {
-      gui.left.triggered.updateDisplay();
-      gui.left.held.updateDisplay();
-      gui.right.triggered.updateDisplay();
-      gui.right.held.updateDisplay();
-      gui.lightAttack.triggered.updateDisplay();
-      gui.lightAttack.held.updateDisplay();
-      gui.start.triggered.updateDisplay();
-      gui.start.held.updateDisplay();
-      gui.animator.frame.updateDisplay();
-    });
-
-    //  consume inputs to avoid weird requestAnimationFrame bugs
-    for (let pi = 0; pi < this.players.length; pi++) {
-      const p = this.players[pi];
-      for (const a in p.actionMap) {
-        //@ts-ignore
-        const trigger: ActionTrigger = p.actionMap[a];
-        if (trigger.triggered) trigger.held = true;
-        trigger.triggered = false;
-      }
-    }
   }
 
   public override render(): void {
@@ -157,6 +119,7 @@ function getGUIPosition(playerIndex: i32) {
 }
 
 export type GUICtrl = {
+  gui: GUI;
   name: Controller;
   health: Controller;
   left: {
@@ -203,6 +166,7 @@ function createGUICtrl(
     container,
   });
   return {
+    gui,
     name: gui.add(character.data, "name").name("Name").listen(false),
     health: gui.add(character, "health").name(`${name} Health`).listen(true),
     left: {

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Controller } from "lil-gui";
+import GUI, { Controller } from "lil-gui";
 import { FGCharacter } from "../lib/character";
 import { Game } from "../lib/game";
 import { f32 } from "../lib/types";
@@ -14,11 +14,11 @@ export declare class FGame extends Game {
     addPlayers(...characters: FGCharacter[]): void;
     colliders: Mesh[];
     constructor();
-    handleInput(): void;
     render(): void;
     update(dt: f32): void;
 }
 export declare type GUICtrl = {
+    gui: GUI;
     name: Controller;
     health: Controller;
     left: {
