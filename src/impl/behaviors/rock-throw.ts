@@ -11,7 +11,7 @@ import {
 } from "three";
 import { FGCharacter } from "../../lib/character";
 import { CommandType } from "../../lib/input";
-import { createSpriteFallback, Sprite } from "../../lib/sprite";
+import { createSprite, Sprite } from "../../lib/sprite";
 import { dt } from "../../lib/time";
 import { getRoot, overlap } from "../../lib/utils";
 import { TaskAttack } from "./attack";
@@ -42,9 +42,12 @@ export class TaskRockThrow extends TaskAttack {
     const ca = character.data.abilities[1];
     if (!ca) throw new Error("no charge attack");
 
-    if (this.cf > 0) {
-      if (this.rock) {
-        const opacity = (ca.startup - this.ability.startup) / ca.startup;
+    if (this.cf > 0 && this.rock) {
+      const startupFramesCount =
+        this.cf - this.ability.active - this.ability.recovery + 1;
+      if (startupFramesCount > 0) {
+        const opacity =
+          (this.ability.startup - startupFramesCount) / ca.startup;
         if (Array.isArray(this.rock.material))
           this.rock.material.forEach((m) => (m.opacity = opacity));
         else this.rock.material.opacity = opacity;
@@ -83,11 +86,12 @@ export class TaskRockThrow extends TaskAttack {
 
     while (this.ignore.length) this.ignore.shift();
     this.ignore.push(character.hurtbox);
-    this.rock = createSpriteFallback({
+    this.rock = createSprite({
       colorMap: "assets/rock.png",
       tileSize: new Vector2(1, 1),
     });
     this.rock.position.y = 0.75;
+    this.rock.position.z = 0.02;
     character.sprite.add(this.rock);
   }
 
