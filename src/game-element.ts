@@ -13,8 +13,43 @@ import { ActionTrigger, KeyboardActionTrigger } from "./lib/input";
 import { P1Controls, P2Controls } from "./impl/controls";
 import { createTonyCharacter } from "./impl/characters/tony";
 import { createRendyCharacter } from "./impl/characters/rendy";
-import { DirectionalLight, Vector2, Vector3 } from "three";
+import {
+  DirectionalLight,
+  PerspectiveCamera,
+  Vector2,
+  Vector3,
+  WebGLRenderer,
+} from "three";
+import * as THREE from "three";
 import { nextFrame } from "./lib/time";
+import { Clock } from "./lib/clock";
+
+export class FightingGame extends FGame {
+  public renderer: THREE.WebGLRenderer;
+  public mainCamera: THREE.Camera;
+
+  constructor({ clock }: { clock: Clock }) {
+    super({ clock });
+
+    const renderer = new WebGLRenderer({ antialias: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setAnimationLoop(this.loop.bind(this));
+    this.renderer = renderer;
+
+    const camera = new PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      0.01,
+      10
+    );
+    camera.position.z = 1;
+    this.mainCamera = camera;
+  }
+
+  public override render(): void {
+    this.renderer.render(this.activeScene, this.mainCamera);
+  }
+}
 
 @customElement("game-element")
 export class GameElement extends LitElement {
@@ -25,14 +60,14 @@ export class GameElement extends LitElement {
     }
   `;
 
-  public game = new FGame();
+  public game = new FightingGame({ clock: new THREE.Clock() });
   constructor() {
     super();
 
     this.init(this.game);
   }
 
-  private init(game: FGame) {
+  private init(game: FightingGame) {
     const p1 = createTonyCharacter(P1Controls);
     const p2 = createRendyCharacter(P2Controls);
 

@@ -1,7 +1,7 @@
 import { Mesh } from "three";
 import { PlayerBehaviorTree } from "../impl/behaviors/player.tree";
 import { Character } from "../impl/characters/base";
-import { FGame, GUICtrl } from "../impl/game";
+import { FGame } from "../impl/game";
 import { AnimationClip, AnimationComponent } from "./animation";
 import { ActionMap, InputBuffer } from "./input";
 import { Sprite } from "./sprite";
@@ -19,7 +19,6 @@ export declare class FGCharacter {
     blockstun: i32;
     bt: PlayerBehaviorTree;
     ib: InputBuffer;
-    gui: GUICtrl | null;
     constructor({ animator, data, sprite, actionMap, facingRight, behaviorTree, }: {
         animator?: AnimationComponent;
         data: Character;

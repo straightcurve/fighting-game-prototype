@@ -1,5 +1,5 @@
 module.exports = {
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   preset: "ts-jest/presets/default-esm",
   globals: {
     "ts-jest": {

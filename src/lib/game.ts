@@ -1,16 +1,16 @@
-import * as THREE from "three";
+import { Clock } from "./clock";
 import { dt } from "./time";
 import { f32 } from "./types";
 
 export abstract class Game {
-  public clock: THREE.Clock;
+  public clock: Clock;
   public fps: f32;
   public paused: boolean;
 
   private acc: f32;
 
-  constructor() {
-    this.clock = new THREE.Clock();
+  constructor({ clock }: { clock: Clock }) {
+    this.clock = clock;
     this.fps = dt;
     this.acc = 0;
     this.paused = false;

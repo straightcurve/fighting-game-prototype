@@ -4,16 +4,17 @@ import { FGCharacter } from "../lib/character";
 import { Game } from "../lib/game";
 import { f32 } from "../lib/types";
 import { Mesh } from "three";
+import { Clock } from "../lib/clock";
 export declare class FGame extends Game {
     activeScene: THREE.Scene;
-    renderer: THREE.WebGLRenderer;
-    mainCamera: THREE.Camera;
     systems: ((dt: f32) => void)[];
     players: FGCharacter[];
     gui: GUICtrl[];
     addPlayers(...characters: FGCharacter[]): void;
     colliders: Mesh[];
-    constructor();
+    constructor({ clock }: {
+        clock: Clock;
+    });
     render(): void;
     update(dt: f32): void;
 }

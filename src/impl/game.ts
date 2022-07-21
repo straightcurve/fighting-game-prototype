@@ -5,11 +5,10 @@ import { FGCharacter } from "../lib/character";
 import { Game } from "../lib/game";
 import { f32, i32 } from "../lib/types";
 import { Mesh } from "three";
+import { Clock } from "../lib/clock";
 
 export class FGame extends Game {
   public activeScene: THREE.Scene;
-  public renderer: THREE.WebGLRenderer;
-  public mainCamera: THREE.Camera;
 
   public systems: ((dt: f32) => void)[];
 
@@ -22,43 +21,28 @@ export class FGame extends Game {
       this.players.push(character);
       this.colliders.push(character.hurtbox);
       character.game = this;
-      character.gui = createGUICtrl(
-        `P${this.players.length}`,
-        character,
-        getGUIPosition(this.players.length - 1)
-      );
 
-      this.gui.push(character.gui);
+      this.gui.push(
+        createGUICtrl(
+          `P${this.players.length}`,
+          character,
+          getGUIPosition(this.players.length - 1)
+        )
+      );
     });
   }
 
   public colliders: Mesh[] = [];
 
-  constructor() {
-    super();
+  constructor({ clock }: { clock: Clock }) {
+    super({ clock });
 
     this.activeScene = new THREE.Scene();
-
-    const renderer = new THREE.WebGLRenderer({ antialias: false });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(this.loop.bind(this));
-    this.renderer = renderer;
-
-    const camera = new THREE.PerspectiveCamera(
-      70,
-      window.innerWidth / window.innerHeight,
-      0.01,
-      10
-    );
-    camera.position.z = 1;
-    this.mainCamera = camera;
 
     this.systems = [];
   }
 
-  public override render(): void {
-    this.renderer.render(this.activeScene, this.mainCamera);
-  }
+  public override render(): void {}
 
   public override update(dt: f32): void {
     for (let si = 0; si < this.systems.length; si++) {

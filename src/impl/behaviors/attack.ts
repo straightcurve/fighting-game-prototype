@@ -1,6 +1,4 @@
-import { Controller } from "lil-gui";
 import { NodeState, Node } from "../../lib/behavior-trees/node";
-import { FGCharacter } from "../../lib/character";
 import { i32 } from "../../lib/types";
 import { Ability } from "../characters/base";
 
@@ -8,26 +6,12 @@ export abstract class TaskAttack extends Node {
   public cf: i32 = 0;
   public isAttacking: boolean = false;
 
-  public frameGUI!: Controller;
-
   constructor(public ability: Ability) {
     super();
   }
 
   public override evaluate() {
     if (!this.shouldEvaluate()) return NodeState.Failure;
-
-    if (!this.frameGUI) {
-      const character = this.getData<FGCharacter>("character");
-      if (character !== null) {
-        const gui = character.gui;
-        if (gui !== null)
-          this.frameGUI = gui.gui
-            .add(this, "cf")
-            .name(`frame....`)
-            .listen(false);
-      }
-    }
 
     this.beforeUpdate();
 
@@ -37,7 +21,6 @@ export abstract class TaskAttack extends Node {
     }
 
     this.cf--;
-    if (this.frameGUI) this.frameGUI.updateDisplay();
     this.update();
 
     this.afterUpdate();
