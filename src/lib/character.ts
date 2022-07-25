@@ -20,6 +20,7 @@ export class FGCharacter {
   public facingRight: boolean;
   public isBlocking: boolean;
   public blockstun: i32 = 0;
+  public hitstun: i32 = 0;
 
   public bt: PlayerBehaviorTree;
   public ib: InputBuffer;
@@ -94,6 +95,7 @@ export class FGCharacter {
       return;
     }
 
+    this.hitstun = 12;
     this.health -= amount;
   }
 }

@@ -11,6 +11,7 @@ import {
   TaskClearBlock,
 } from "../behaviors/block";
 import { CheckIfDead, TaskDie } from "../behaviors/die";
+import { CheckIfHitStun, TaskHit } from "../behaviors/hit";
 import { TaskIdle } from "../behaviors/idle";
 import { PlayerBehaviorTree } from "../behaviors/player.tree";
 import { TaskPunch } from "../behaviors/punch";
@@ -73,6 +74,7 @@ export class TonyBehaviorTree extends PlayerBehaviorTree {
     return new Selector([
       new TaskClearBlock(),
       new Sequence([new CheckIfBlockStun(), new TaskBlock()]),
+      new Sequence([new CheckIfHitStun(), new TaskHit()]),
       new Sequence([new CheckIfDead(), new TaskDie()]),
       new Selector([new TaskPunch(Tony.abilities[0])]),
       new TaskWalk(),

@@ -18,6 +18,7 @@ import { TaskRockThrow } from "../behaviors/rock-throw";
 import { PlayerBehaviorTree } from "../behaviors/player.tree";
 import { FGCharacter } from "../../lib/character";
 import { createSprite } from "../../lib/sprite";
+import { CheckIfHitStun, TaskHit } from "../behaviors/hit";
 
 export const Rendy: Character = {
   name: "Rendy",
@@ -87,6 +88,7 @@ export class RendyBehaviorTree extends PlayerBehaviorTree {
     return new Selector([
       new TaskClearBlock(),
       new Sequence([new CheckIfBlockStun(), new TaskBlock()]),
+      new Sequence([new CheckIfHitStun(), new TaskHit()]),
       new Sequence([new CheckIfDead(), new TaskDie()]),
       new Selector([
         new TaskRockThrow(Rendy.abilities[1]),

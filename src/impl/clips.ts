@@ -28,7 +28,8 @@ export const walkLeft: AnimationClip = {
   fps: 1,
 };
 
-export const walkBack: AnimationClip = { loop: false,
+export const walkBack: AnimationClip = {
+  loop: false,
   start: 36,
   length: 1,
   fps: 1,
@@ -65,6 +66,20 @@ export const block: AnimationClip = {
 export const blockLeft: AnimationClip = {
   loop: false,
   start: 36 * 4 - 1,
+  length: 1,
+  fps: 1,
+};
+
+export const hit: AnimationClip = {
+  loop: false,
+  start: 36 * 3 + 3,
+  length: 1,
+  fps: 1,
+};
+
+export const hitLeft: AnimationClip = {
+  loop: false,
+  start: 36 * 4 - 4,
   length: 1,
   fps: 1,
 };

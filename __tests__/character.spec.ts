@@ -66,6 +66,41 @@ describe("character", () => {
     game.activeScene.add(background);
   });
   describe("task punch", () => {
+    it("should apply hitstun on first active frame", () => {
+      const punch = new TaskPunch(p2.data.abilities[0]);
+      punch.setData("character", p2);
+
+      p2.actionMap.LightAttack.triggered = true;
+      punch.evaluate();
+
+      let framesTillActive = p2.data.abilities[0].startup - 1;
+      while (framesTillActive--) {
+        game.loop();
+        const msg = `framesTillActive: ${framesTillActive}`;
+        expect({
+          msg,
+          hitstun: p1.hitstun,
+        }).toEqual({
+          msg,
+          hitstun: 0,
+        });
+      }
+
+      expect({
+        hitstun: p1.hitstun,
+      }).toEqual({
+        hitstun: 0,
+      });
+
+      game.loop();
+
+      expect({
+        hitstun: p1.hitstun,
+      }).toEqual({
+        hitstun: 12,
+      });
+    });
+
     it("should apply blockstun on first active frame", () => {
       const punch = new TaskPunch(p2.data.abilities[0]);
       punch.setData("character", p2);
