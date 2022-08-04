@@ -26,6 +26,12 @@ export class TaskRockThrow extends TaskAttack {
     const character = this.getData<FGCharacter>("character");
     if (character === null) return false;
 
+    console.log(character.hitstun);
+    if (character.hitstun > 0) {
+      this.cancel();
+      return false;
+    }
+
     const [command, indexes] = character.ib.match();
     if (command && command.type === CommandType.FL) {
       this.isAttacking = true;
@@ -93,6 +99,8 @@ export class TaskRockThrow extends TaskAttack {
     this.rock.position.y = 0.75;
     this.rock.position.z = 0.02;
     character.sprite.add(this.rock);
+
+    character.armor = 3;
   }
 
   public override update(): void {
@@ -137,6 +145,13 @@ export class TaskRockThrow extends TaskAttack {
   }
 
   public override afterUpdate(): void {
-    if (this.cf === 0) this.isAttacking = false;
+    if (this.cf === 0) {
+      this.isAttacking = false;
+
+      const character = this.getData<FGCharacter>("character");
+      if (character === null) return;
+
+      character.armor = 0;
+    }
   }
 }

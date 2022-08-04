@@ -40,6 +40,12 @@ export abstract class TaskAttack extends Node {
     return this.cf <= this.ability.recovery;
   }
 
+  public cancel() {
+    console.log("canceled");
+    this.cf = 0;
+    this.isAttacking = false;
+  }
+
   public abstract beforeUpdate(): void;
   public abstract update(): void;
   public abstract afterUpdate(): void;

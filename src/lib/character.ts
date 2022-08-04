@@ -21,6 +21,7 @@ export class FGCharacter {
   public isBlocking: boolean;
   public blockstun: i32 = 0;
   public hitstun: i32 = 0;
+  public armor: i32 = 0;
 
   public bt: PlayerBehaviorTree;
   public ib: InputBuffer;
@@ -92,6 +93,11 @@ export class FGCharacter {
     if (this.health <= 0) return;
     if (this.isBlocking) {
       this.blockstun = 12;
+      return;
+    }
+
+    if (this.armor > 0) {
+      this.armor--;
       return;
     }
 
