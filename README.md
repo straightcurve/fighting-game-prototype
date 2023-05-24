@@ -1,5 +1,7 @@
 # fighting game prototype
 
+![banner image](assets/banner.avif)
+
 ## this project doesn't follow any kind of book, manual or any other kind of material.
 
 i just implemented every idea that came to me and a friend of mine so you can say this project is just me trying to figure out how to make a fighting game without making a mess out of the codebase and unfortunately i can't say i didn't. haha :(
